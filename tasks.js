@@ -49,7 +49,6 @@
     }
   
     else if (text.slice(0, 3) === cmdList[4]) {
-      //Add
       if (text.slice(3).trim() == "") {
         console.log("No entry");
       } else {
