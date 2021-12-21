@@ -116,7 +116,7 @@
    * @returns {void}
    */
   function help(){
-    console.log('Enter \'help\' for all commands.\nEnter \'quit\' or \'exit\' to quit.\nEnter \'hello\' for greeting or \'hello X\' where X is your name.\nEnter \'add x\' for adding a task to the list.\nEnter \'remove\' or \'remove (task number)\' to remove a task.');
+    console.log('Enter \'help\' for all commands.\nEnter \'quit\' or \'exit\' to quit.\nEnter \'hello\' for greeting or \'hello X\' where X is your name.\nEnter \'add x\' for adding a task to the list.\nEnter \'remove\' or \'remove -task number-\' to remove a task.');
   }
   
   
