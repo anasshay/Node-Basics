@@ -1,18 +1,1 @@
-[
-    {
-        "task": "a",
-        "status": false
-    },
-    {
-        "task": "d",
-        "status": false
-    },
-    {
-        "task": "task",
-        "status": false
-    },
-    {
-        "task": "a",
-        "status": false
-    }
-]
+[]

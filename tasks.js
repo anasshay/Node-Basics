@@ -1,4 +1,5 @@
 var fs = require('fs');
+let jsonFile = '';
 let tasksObj = [];
 
 
@@ -244,8 +245,8 @@ let tasksObj = [];
 
   function save(file) {
     try {
-      fs.writeFileSync('database.json', JSON.stringify(file, null, 4));
-      console.log("data has been saved.");
+      fs.writeFileSync(`${jsonFile}`, JSON.stringify(file, null, 4));
+      console.log(`data has been saved in ${jsonFile}.`);
   } catch (error) {
       console.error(err);
   }
@@ -258,6 +259,7 @@ let tasksObj = [];
       const json_data = fs.readFileSync('database.json', 'utf-8');
       tasksObj = JSON.parse(json_data.toString());
       console.log('task list loaded')
+      jsonFile = 'database.json';
     } catch (err) {
       console.log(err);
     }
@@ -267,6 +269,7 @@ let tasksObj = [];
       const json_data = fs.readFileSync(`${value}`, 'utf-8');
       tasksObj = JSON.parse(json_data.toString());
       console.log('task list loaded')
+      jsonFile = `${value}`;
     } catch (err) {
       console.log(err);
     }
