@@ -62,23 +62,22 @@
 
     else if (text.slice(0,4).trim() === "edit") {
       inpt_array = text.trim().split(' ');
-      // console.log(inpt_array)
-      if (text.slice(4).trim() === "" || inpt_array.length <2 || inpt_array[1] == '') {
+      if (text.slice(4).trim() === "" || inpt_array[1] == '') {
         console.log('Please enter a valid edit command \'edit -task nb- -new value-\'');
-        // console.log(inpt_array.slice(2));
       }
       else if (isNaN(inpt_array[1]) == true){
         edit(0, inpt_array.slice(1).join(' '))
       }
       else {
-        edit (inpt_array[1], inpt_array.slice(2).join(' '))
-      }
-
-      // else {
-      //   edit(text.slice(4).trim());
-      // }
+        // inpt_array = ['edit', 'bla', 'bla']
+        if (inpt_array[1] <= tasks_list.length) {
+          edit (inpt_array[1], inpt_array.slice(2).join(' '));
+        }
+        else {
+          console.log('Please enter a valid edit command \'edit -task nb- -new value-\'');
+        }
     } 
-  
+    }
     else if (text.slice(0, 6) === cmdList[5]) {
       if (text.slice(6).trim() === "") {
         remove("end");
