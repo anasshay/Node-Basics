@@ -132,14 +132,19 @@
   
   function remove(value) {
     // console.log(value);
-    if (value == 'end') {
-      tasks_list.pop();
+    if (value > tasks_list.length || value <= 0){
+      console.log('Please enter an existing value');
     }
-    else if (value > 0){
-      tasks_list.splice(value-1,1);
-    }
-  updateObj(tasks_obj,tasks_list);
-  }
+    else{
+      if (value == 'end') {
+        tasks_list.pop();
+      }
+      else if (value > 0){
+        tasks_list.splice(value-1,1);
+      }
+    updateObj(tasks_obj,tasks_list);
+      }
+}
   
   function printlist() { //temporary
     // console.log(tasks_obj)
