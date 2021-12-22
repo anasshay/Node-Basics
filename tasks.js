@@ -1,3 +1,13 @@
+var fs = require('fs');
+let tasksObj = [];
+
+
+// fs.readFile('database.json', 'utf-8', (err, data) => {
+//   if (err) {
+//       throw err;
+//   }
+//   // tasksObj = JSON.parse(data.toString());
+// });
 
 /**
  * Starts the application
@@ -15,9 +25,20 @@
     process.stdin.on('data', onDataReceived);
     console.log(`Welcome to ${name}'s application!`)
     console.log("--------------------")
+    console.log(process.argv);
+    if (process.argv[2] == undefined){
+      console.log('load file');
+      load('default');
+    }
+    else {
+      load(process.argv[2])
+    }
+    // console.log(process.argv[2]);
   }
+
   
-  let tasksObj = [];
+
+  
   /**
    * Decides what to do depending on the data that was received
    * This function receives the input sent by the user.
@@ -37,7 +58,11 @@
   
   function onDataReceived(text) {
     if (text === cmdList[0]+'\n' || text === cmdList[1] + '\n') {
-      quit();
+      save(tasksObj);
+    //   setTimeout(function(){
+    //   quit();
+    // }, 100); 
+    quit();
     }
   
     else if(text.slice(0,5) === cmdList[2] || text === cmdList[2] + '\n'){
@@ -156,7 +181,6 @@
   }
   
   
-  let tasks_obj = {}
   // var uncheck = '☐';
   // var check = '☑';
   
@@ -217,9 +241,40 @@
       console.log ('task list is empty')
     }
     }
-  
+    
+  // const data = JSON.stringify(tasksObj);
 
+  function save(file) {
+    try {
+      fs.writeFileSync('database.json', JSON.stringify(file, null, 4));
+      console.log("data has been saved.");
+  } catch (error) {
+      console.error(err);
+  }
   
+  }
+  
+  function load(value) {
+    if (value == 'default'){
+    try {
+      const json_data = fs.readFileSync('database.json', 'utf-8');
+      tasksObj = JSON.parse(json_data.toString());
+      console.log('task list loaded')
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  else {
+    try {
+      const json_data = fs.readFileSync(`${value}`, 'utf-8');
+      tasksObj = JSON.parse(json_data.toString());
+      console.log('task list loaded')
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  }
+
   // The following line starts the application
   startApp("Anass Haydar")
   
