@@ -33,7 +33,7 @@
    * @param  {string} text data typed by the user
    * @returns {void}
    */
-  let cmdList = ['quit','exit', 'hello', 'help', 'add', 'remove'];
+  let cmdList = ['quit','exit', 'hello', 'help', 'add', 'remove', 'edit'];
   
   function onDataReceived(text) {
     if (text === cmdList[0]+'\n' || text === cmdList[1] + '\n') {
@@ -58,6 +58,25 @@
   
     else if (text.trim() === "p") {
       printlist();
+    } 
+
+    else if (text.slice(0,4).trim() === "edit") {
+      inpt_array = text.trim().split(' ');
+      // console.log(inpt_array)
+      if (text.slice(4).trim() === "" || inpt_array.length <2 || inpt_array[1] == '') {
+        console.log('Please enter a valid edit command \'edit -task nb- -new value-\'');
+        // console.log(inpt_array.slice(2));
+      }
+      else if (isNaN(inpt_array[1]) == true){
+        edit(0, inpt_array.slice(1).join(' '))
+      }
+      else {
+        edit (inpt_array[1], inpt_array.slice(2).join(' '))
+      }
+
+      // else {
+      //   edit(text.slice(4).trim());
+      // }
     } 
   
     else if (text.slice(0, 6) === cmdList[5]) {
@@ -146,6 +165,18 @@
       }
 }
   
+  function edit(value, content) {
+    if (value < tasks_list && value > 0){
+    value = parseInt(value.trim());
+    tasks_list[value-1] = content;
+    // updateObj(tasks_obj,tasks_list)
+    }
+    else if (value == 0) {
+      tasks_list[tasks_list.length-1] = content;
+    }
+    updateObj(tasks_obj,tasks_list)
+  }
+
   function printlist() { //temporary
     // console.log(tasks_obj)
     for (let i = 0; i < tasks_list.length; i++) {
