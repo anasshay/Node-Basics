@@ -25,9 +25,7 @@ let tasksObj = [];
     process.stdin.on('data', onDataReceived);
     console.log(`Welcome to ${name}'s application!`)
     console.log("--------------------")
-    console.log(process.argv);
     if (process.argv[2] == undefined){
-      console.log('load file');
       load('default');
     }
     else {
