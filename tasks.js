@@ -10,185 +10,221 @@
  * @returns {void}
  */
  function startApp(name){
-    process.stdin.resume();
-    process.stdin.setEncoding('utf8');
-    process.stdin.on('data', onDataReceived);
-    console.log(`Welcome to ${name}'s application!`)
-    console.log("--------------------")
-  }
-  
-  
-  /**
-   * Decides what to do depending on the data that was received
-   * This function receives the input sent by the user.
-   * 
-   * For example, if the user entered 
-   * ```
-   * node tasks.js batata
-   * ```
-   * 
-   * The text received would be "batata"
-   * This function  then directs to other functions
-   * 
-   * @param  {string} text data typed by the user
-   * @returns {void}
-   */
-  let cmdList = ['quit','exit', 'hello', 'help', 'add', 'remove', 'edit'];
-  
-  function onDataReceived(text) {
-    if (text === cmdList[0]+'\n' || text === cmdList[1] + '\n') {
-      quit();
-    }
-  
-    else if(text.slice(0,5) === cmdList[2] || text === cmdList[2] + '\n'){
-      hello(text.slice(5).trim());
-    }
-  
-    else if (text === cmdList[3] + '\n') {
-      help();
-    }
-  
-    else if (text.slice(0, 3) === cmdList[4]) {
-      if (text.slice(3).trim() == "") {
-        console.log("No entry");
-      } else {
-        add(text.slice(3).trim());
-      }
-    }
-  
-    else if (text.trim() === "p") {
-      printlist();
-    } 
+  process.stdin.resume();
+  process.stdin.setEncoding('utf8');
+  process.stdin.on('data', onDataReceived);
+  console.log(`Welcome to ${name}'s application!`)
+  console.log("--------------------")
+}
 
-    else if (text.slice(0,4).trim() === "edit") {
-      inpt_array = text.trim().split(' ');
-      if (text.slice(4).trim() === "" || inpt_array[1] == '') {
-        console.log('Please enter a valid edit command \'edit -task nb- -new value-\'');
-      }
-      else if (isNaN(inpt_array[1]) == true){
-        edit(0, inpt_array.slice(1).join(' '))
+let tasksObj = [];
+/**
+ * Decides what to do depending on the data that was received
+ * This function receives the input sent by the user.
+ * 
+ * For example, if the user entered 
+ * ```
+ * node tasks.js batata
+ * ```
+ * 
+ * The text received would be "batata"
+ * This function  then directs to other functions
+ * 
+ * @param  {string} text data typed by the user
+ * @returns {void}
+ */
+let cmdList = ['quit','exit', 'hello', 'help', 'add', 'remove', 'edit', 'check', 'uncheck', 'list'];
+
+function onDataReceived(text) {
+  if (text === cmdList[0]+'\n' || text === cmdList[1] + '\n') {
+    quit();
+  }
+
+  else if(text.slice(0,5) === cmdList[2] || text === cmdList[2] + '\n'){
+    hello(text.slice(5).trim());
+  }
+
+  else if (text === cmdList[3] + '\n') {
+    help();
+  }
+
+  else if (text.slice(0, 3) === cmdList[4]) {
+    if (text.slice(3).trim() == "") {
+      console.log("No entry");
+    } else {
+      add(text.slice(3).trim());
+      
+    }
+  }
+
+  else if (text.trim() === "list") {
+    printlist();
+  } 
+
+  else if (text.slice(0,4).trim() === "edit") {
+    inpt_array = text.trim().split(' ');
+    if (text.slice(4).trim() === "" || inpt_array[1] == '') {
+      console.log('Please enter a valid edit command \'edit -task nb- -new value-\'');
+    }
+    else if (isNaN(inpt_array[1]) == true){
+      edit(0, inpt_array.slice(1).join(' '))
+    }
+    else {
+      if (inpt_array[1] <= tasksObj.length) {
+        edit (inpt_array[1], inpt_array.slice(2).join(' '));
       }
       else {
-        // inpt_array = ['edit', 'bla', 'bla']
-        if (inpt_array[1] <= tasks_list.length) {
-          edit (inpt_array[1], inpt_array.slice(2).join(' '));
-        }
-        else {
-          console.log('Please enter a valid edit command \'edit -task nb- -new value-\'');
-        }
-    } 
-    }
-    else if (text.slice(0, 6) === cmdList[5]) {
-      if (text.slice(6).trim() === "") {
-        remove("end");
-      } else {
-        let rm_num = parseInt(text.slice(6).trim());
-        remove(rm_num);
+        console.log('Please enter a valid edit command \'edit -task nb- -new value-\'');
       }
-    } 
-  
-    else{
-      unknownCommand(text);
-      }
+  } 
   }
-  
-  
-  /**
-   * prints "unknown command"
-   * This function is supposed to run when all other commands have failed
-   *
-   * @param  {string} c the text received
-   * @returns {void}
-   */
-  function unknownCommand(c){
-    console.log('unknown command: "'+c.trim()+'"')
-  }
-  
-  
-  /**
-   * Says hello
-   * @param  {string} inpt
-   * @returns {void}
-   */
-  function hello(inpt){
-      inpt = inpt.replace('\n', '').trim();
-      if (inpt)
-      {inpt = ' ' + inpt;}
-      console.log('hello'+ inpt + '!');
+  else if (text.slice(0, 6) === cmdList[5]) {
+    if (text.slice(6).trim() === "") {
+      remove("end");
+    } else {
+      let rm_num = parseInt(text.slice(6).trim());
+      remove(rm_num);
     }
-  
-  
-  /**
-   * Exits the application
-   *
-   * @returns {void}
-   */
-  function quit(){
-    console.log('Quitting now, goodbye!')
-    process.exit();
-  }
-  
-  /**
-   * Help menu
-   * This function show all the commands that are available
-   * @returns {void}
-   */
-  function help(){
-    console.log('Enter \'help\' for all commands.\nEnter \'quit\' or \'exit\' to quit.\nEnter \'hello\' for greeting or \'hello X\' where X is your name.\nEnter \'add x\' for adding a task to the list.\nEnter \'remove\' or \'remove -task number-\' to remove a task.');
-  }
-  
-  
-  let tasks_list = []
-  let tasks_obj = {}
-  var stats = '[ ]';
-  // ✓
-  
-  function add(value) {
-      tasks_list.push(value);
-      updateObj(tasks_obj,tasks_list);
-  }
-  
-  function remove(value) {
-    // console.log(value);
-    if (value > tasks_list.length || value <= 0){
-      console.log('Please enter an existing value');
+  } 
+  else if (text.slice(0,5) == 'check') {
+    inpt_array = text.trim().split(' ');
+    if(text.slice(5).trim() === "" || isNaN(inpt_array[1]) == true){
+     console.log ('Invalid input');
     }
-    else{
-      if (value == 'end') {
-        tasks_list.pop();
-      }
-      else if (value > 0){
-        tasks_list.splice(value-1,1);
-      }
-    updateObj(tasks_obj,tasks_list);
-      }
-}
-  
-  function edit(value, content) {
-    if (value < tasks_list && value > 0){
-    value = parseInt(value.trim());
-    tasks_list[value-1] = content;
-    // updateObj(tasks_obj,tasks_list)
+    else {
+      check(inpt_array[1])
     }
-    else if (value == 0) {
-      tasks_list[tasks_list.length-1] = content;
-    }
-    updateObj(tasks_obj,tasks_list)
   }
 
-  function printlist() { //temporary
-    // console.log(tasks_obj)
-    for (let i = 0; i < tasks_list.length; i++) {
-      console.log(Object.keys(tasks_obj)[i] + ' - ' + stats + ' ' + tasks_obj[i+1]) 
+  else if (text.slice(0,7) == 'uncheck') {
+    if(text.slice(7).trim() === "" || isNaN(inpt_array[1]) == true){
+     console.log ('Invalid input');
+    }
+    else {
+      uncheck(inpt_array[1])
     }
   }
-  
-  function updateObj(obj,list) {
-    for (let val = 1; val <= list.length; val++) {
-      obj[val] = list[val-1];
+
+  else{
+    unknownCommand(text);
     }
+}
+
+
+/**
+ * prints "unknown command"
+ * This function is supposed to run when all other commands have failed
+ *
+ * @param  {string} c the text received
+ * @returns {void}
+ */
+function unknownCommand(c){
+  console.log('unknown command: "'+c.trim()+'"')
+}
+
+
+/**
+ * Says hello
+ * @param  {string} inpt
+ * @returns {void}
+ */
+function hello(inpt){
+    inpt = inpt.replace('\n', '').trim();
+    if (inpt)
+    {inpt = ' ' + inpt;}
+    console.log('hello'+ inpt + '!');
   }
-  
-  // The following line starts the application
-  startApp("Anass Haydar")
-  
+
+
+/**
+ * Exits the application
+ *
+ * @returns {void}
+ */
+function quit(){
+  console.log('Quitting now, goodbye!')
+  process.exit();
+}
+
+/**
+ * Help menu
+ * This function show all the commands that are available
+ * @returns {void}
+ */
+function help(){
+  console.log('Enter \'help\' for all commands.\nEnter \'list\' to print task list.\nEnter \'quit\' or \'exit\' to quit.\nEnter \'hello\' for greeting or \'hello X\' where X is your name.\nEnter \'add x\' for adding a task to the list.\nEnter \'remove\' or \'remove -task number-\' to remove a task.\nEnter \'check -task number-\' or \'uncheck -task number-\' to check or uncheck a task.');
+}
+
+
+let tasks_obj = {}
+// var uncheck = '☐';
+// var check = '☑';
+
+function add(value) {
+    tasksObj.push({
+      'task': value,
+      'status' : false,
+    })
+}
+
+function remove(value) {
+  if (value > tasksObj.length || value <= 0){
+    console.log('Please enter an existing value');
+  }
+  else{
+    if (value == 'end') {
+      tasksObj.pop()
+      // tasks_list.pop();
+    }
+    else if (value > 0){
+      tasksObj.splice(value-1,1);
+      // tasks_list.splice(value-1,1);
+    }
+  // updateObj(tasks_obj,tasks_list);
+    }
+}
+
+function edit(value, content) {
+  if (value <= tasksObj.length && value > 0){
+  value = parseInt(value.trim());
+  tasksObj[value-1].task = content
+  // tasks_list[value-1] = content;
+  }
+
+  else if (value == 0) {
+    // tasks_list[tasks_list.length-1] = content;
+    tasksObj[tasksObj.length-1].task = content;
+  }
+  // updateObj(tasks_obj,tasks_list)
+}
+
+function check(value) {
+  if (value <= tasksObj.length){
+  tasksObj[value-1].status = true;
+  }
+}
+
+function uncheck(value) {
+  if (value <= tasksObj.length){
+    tasksObj[value-1].status = false;
+    }
+}
+
+function printlist() {
+  if(tasksObj.length != 0){
+    tasksObj.map((task,index) => {
+      if(task.status == true){
+        console.log(`${index+1} - ☑ ${task.task}`)
+      }
+      else if(task.status == false){
+        console.log(`${index+1} - ☐ ${task.task}`)
+    }})
+  }else {
+    console.log ('task list is empty')
+  }
+  }
+
+
+
+// The following line starts the application
+startApp("Anass Haydar")
