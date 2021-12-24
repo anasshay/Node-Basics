@@ -129,6 +129,9 @@ let tasksObj = [];
       }
     }
   
+    else if (text.trim() == 'clear') {
+      console.clear();
+    }
     else{
       unknownCommand(text);
       }
@@ -247,14 +250,14 @@ let tasksObj = [];
     try {
       fs.writeFileSync(`${jsonFile}`, JSON.stringify(file, null, 4));
       console.log(`data has been saved in ${jsonFile}.`);
-  } catch (error) {
+  } catch (err) {
       console.error(err);
   }
   
   }
   
-  function load(value) {
-    if (value == 'default'){
+  function load(file) {
+    if (file == 'default'){
     try {
       const json_data = fs.readFileSync('database.json', 'utf-8');
       tasksObj = JSON.parse(json_data.toString());
@@ -266,10 +269,10 @@ let tasksObj = [];
   }
   else {
     try {
-      const json_data = fs.readFileSync(`${value}`, 'utf-8');
+      const json_data = fs.readFileSync(`${file}`, 'utf-8');
       tasksObj = JSON.parse(json_data.toString());
       console.log('task list loaded')
-      jsonFile = `${value}`;
+      jsonFile = `${file}`;
     } catch (err) {
       console.log(err);
     }
